@@ -151,20 +151,25 @@ class ClassifierGUI:
         settings_frame.grid(row=3, column=0, columnspan=3, pady=10, sticky=(tk.W, tk.E))
 
         ttk.Label(settings_frame, text="Порог уверенности:").pack(side=tk.LEFT, padx=5)
-        self.threshold_var = tk.DoubleVar(value=0.0)
+        self.threshold_var = tk.DoubleVar(value=0.5)
         threshold_scale = ttk.Scale(settings_frame, from_=0.0, to=1.0,
                                     variable=self.threshold_var, orient=tk.HORIZONTAL,
                                     length=200)
         threshold_scale.pack(side=tk.LEFT, padx=5)
 
-        self.threshold_label = ttk.Label(settings_frame, text="0.0")
+        self.threshold_label = ttk.Label(settings_frame, text="0.50")
         self.threshold_label.pack(side=tk.LEFT, padx=5)
 
         # Обновление метки порога
-        def update_threshold_label():
-            self.threshold_label.config(text=f"{self.threshold_var.get():.2f}")
+        def update_threshold_label(*args):
+            value = self.threshold_var.get()
+            if value == 0:
+                self.threshold_label.config(text=f"{value:.2f} (выкл)")
+            else:
+                self.threshold_label.config(text=f"{value:.2f}")
 
         self.threshold_var.trace('w', update_threshold_label)
+        update_threshold_label()
 
         # Область отображения изображения
         self.image_frame = ttk.LabelFrame(main_frame, text="Изображение", padding="5")
